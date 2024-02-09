@@ -6,6 +6,7 @@ void divide() {
 }
 
 void aaa() {
+    cout << "did some things (but in a different function)";
 }
 
 int main() {
