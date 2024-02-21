@@ -16,7 +16,7 @@
     documentation only on the Equation and Data structs, though
     these types of comments would be around anything the user
     would come into contact with (in this case I'm writing 
-    documentation for any future developer who wants to modify
+    documentation for any future developer who may want to modify
     or extend this code).
 */
 
