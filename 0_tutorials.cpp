@@ -15,12 +15,12 @@
 
     Common forms of tutorials can include an inline output terminal/code 
     editor (like in a W3 Schools page), but for the purposes of
-    this presentation, I'll just be writing comments in this code
-    (specifically main()).
+    this presentation, I'll just be writing comments in this file
+    (specifically above main()).
 */
 
 /* 
-    <example>
+    <tutorial>
         This program is essentially a very limited versino
         of a graphing calculator. 
 
@@ -32,19 +32,17 @@
             3.) repeat step 2
             4.) Congratulations! You've just defined a linear
                 function, and found some points along it!
-    </example>
+    </tutorial>
 
-    In the above example (denoted with html tags), the steps to introducing a 
+    In the above example, the steps to introducing a 
     new user to using the program are clearly laid out and easy to follow,
     and they familiarize the user with inputting values to operate the program.
     
     Remember, tutorials are meant to give a user a starting place
     for using the program, not to give the user an understanding of 
     the code.
-    (During the presentation, I hide away all the details
-    of the above functions in order to emphasize this fact. 
-    at this point, everything is a black box to the user)
 */
+
 #include "program.h"
 int main() {
     program p;

@@ -10,13 +10,13 @@
 */
 
 /*
-    <example> 
+    <how-to> 
         Usage for finding some points on functions
         ======================================
 
         Using the input function option, inputting any A and B
         will give five points on the line y=Ax+B.
-    </example>
+    </how-to>
 
     The above example, while simple, gets the point across. 
     In this stage, you should not be trying to teach the user
@@ -24,7 +24,7 @@
     that (since your tutorial was so good).
 
     The main takeaway is that how-to guides assume some competence
-    with the program, and aid in solving specific real-world
+    with the program, and aid in solving specific (but simple) real-world
     problems. 
 */
 

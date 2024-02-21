@@ -1,8 +1,8 @@
 /*
     Finally, we get to explanations.
 
-    Explanations are the "why" of your code. Although
-    not every line/method/whatever in your code needs
+    Explanations are the "why" of your code. Not
+    every line/method/whatever in your code needs
     an explanation, so you should only focus on making
     comments for any unusual or complicated choices. 
 
