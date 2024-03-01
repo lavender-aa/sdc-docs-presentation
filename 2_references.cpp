@@ -6,7 +6,9 @@
 
     This is where you get a slight look at the underlying
     logic of the program, though still not going into details
-    about each function's specific implementation. 
+    about each function's specific implementation. In this example
+    code, the implementation of each function is shown, but they
+    are not a part of the reference documentation.  
 
     Most technical documentation is reference documentation.
     If you're going through the official docs of your programming
