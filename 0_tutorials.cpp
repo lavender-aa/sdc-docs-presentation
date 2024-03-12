@@ -47,5 +47,4 @@
 int main() {
     program p;
     p.run();
-    // test
 }
