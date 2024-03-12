@@ -17,8 +17,8 @@ class program {
         vector<string> options = {"0", "1", "2", "3", "q"};
         vector<double> domain = {1, 2, 3, 4, 5};
         Equation equation = {0, 0};
-        Data program_data = Data {history, options, domain, equation};
-        program_loop(program_data);
+        data.update(history, options, domain, equation);
+        program_loop();
     }
 
     private:
@@ -42,6 +42,13 @@ class program {
             history.push_back(eq);
         }
 
+        void update(vector<Equation> hist, vector<string> opt, vector<double> dom, Equation curr) {
+            history = hist;
+            options = opt;
+            domain_values = dom;
+            current_equation = curr;
+        }
+
         void set_current_equation(double a, double b) {
             current_equation = Equation {a, b};
             update_history(current_equation);
@@ -51,13 +58,13 @@ class program {
             current_equation = eq;
             update_history(current_equation);
         }
-    };
+    } data;
 
     double calculate(Equation eq, double x) {
         return (eq.a * x) + eq.b;
     }
 
-    void make_table(Data& data) {
+    void make_table() {
         cout << "\n\nEvaluating current equation (f(x)=" << data.current_equation.as_string() << ") at default domain points:" << endl;
 
         for(int i = 0; i < data.domain_values.size(); i++) {
@@ -70,7 +77,7 @@ class program {
         cout << "\n\n\n----------------\n";
     }
 
-    void adjust_domain_points(Data& data) {
+    void adjust_domain_points() {
         cout << "\n\nThe current values are: \n\t";
         for(int i = 0; i < data.domain_values.size(); i++) {
             if(i == data.domain_values.size() - 1) {
@@ -98,12 +105,10 @@ class program {
     }
 
     double random_bounds(double start, double end) {
-        std::uniform_real_distribution<double> unif(start, end);
-        std::default_random_engine re;
-        return unif(re);
+        return (rand() / (double)RAND_MAX) * (end - start) + start;
     }
 
-    void generate_random(Data& data) {
+    void generate_random() {
         cout << "\n\nPick integer start and end values for the range of random values: \n";
         double start, end;
         
@@ -118,10 +123,10 @@ class program {
         cout << "\tf(x)=" << rand_eq.as_string();
 
         data.set_current_equation(rand_eq);
-        make_table(data);
+        make_table();
     }
 
-    void choose_from_history(Data& data) {
+    void choose_from_history() {
         if(data.history.size() == 0) {
             cout << "\nNo functions have been used.\nPress any key to return to the home screen.";
             getch();
@@ -147,10 +152,10 @@ class program {
         std:istringstream(choice) >> number;
         data.set_current_equation(data.history[number]);
 
-        make_table(data);
+        make_table();
     }
 
-    void input_function(Data& data) {
+    void input_function() {
         double A = 0;
         double B = 0;
 
@@ -162,10 +167,10 @@ class program {
         cin >> B;
 
         data.set_current_equation(A, B);
-        make_table(data);
+        make_table();
     }
 
-    int choice_to_index(string choice, Data& data) {
+    int choice_to_index(string choice) {
         for(int i = 0; i < data.options.size(); i++) {
             if(choice == data.options[i]){
                 return i;
@@ -184,26 +189,26 @@ class program {
             << "Select an option: ";
     }
 
-    void program_loop(Data& data) {
+    void program_loop() {
         string choice = "";
         while (true) {
             print_options();
             cin >> choice;
-            switch(choice_to_index(choice, data)) {
+            switch(choice_to_index(choice)) {
                 case -1: 
                     cout << "choice '" << choice << "' not found.\n\n\n----------------\n";
                     break;
                 case 0: 
-                    input_function(data);
+                    input_function();
                     break;
                 case 1: 
-                    choose_from_history(data);
+                    choose_from_history();
                     break;
                 case 2: 
-                    generate_random(data);
+                    generate_random();
                     break;
                 case 3: 
-                    adjust_domain_points(data);
+                    adjust_domain_points();
                     break;
                 default: 
                     cout << "Quitting the program.\n\n";
@@ -216,4 +221,4 @@ class program {
         cout << "\nThis program calculates a table of values for any given linear function.\n----------------\n";
     }
 };
-#endif PROGRAM_H
+#endif

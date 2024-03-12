@@ -67,6 +67,13 @@ struct Data {
         history.push_back(eq);
     }
 
+    void update(vector<Equation> hist, vector<string> opt, vector<double> dom, Equation curr) {
+        history = hist;
+        options = opt;
+        domain_values = dom;
+        current_equation = curr;
+    }
+
     // sets the current equation while adding it to the history
     void set_current_equation(double a, double b) {
         current_equation = Equation {a, b};
@@ -77,19 +84,19 @@ struct Data {
         current_equation = eq;
         update_history(current_equation);
     }
-};
+} game_data;
 
 double calculate(Equation eq, double x) {
     return (eq.a * x) + eq.b;
 }
 
 // gets and prints out the result of the current function for each of the x-values
-void make_table(Data& data) {
-    cout << "\n\nEvaluating current equation (f(x)=" << data.current_equation.as_string() << ") at default domain points:" << endl;
+void make_table() {
+    cout << "\n\nEvaluating current equation (f(x)=" << game_data.current_equation.as_string() << ") at default domain points:" << endl;
 
-    for(int i = 0; i < data.domain_values.size(); i++) {
-        double x_value = data.domain_values[i];
-        cout <<  "\tf(" << x_value << ") = " << calculate(data.current_equation, x_value) << endl;
+    for(int i = 0; i < game_data.domain_values.size(); i++) {
+        double x_value = game_data.domain_values[i];
+        cout <<  "\tf(" << x_value << ") = " << calculate(game_data.current_equation, x_value) << endl;
     }
 
     cout << endl << "Press any key to return to the home screen. ";
@@ -103,16 +110,16 @@ void make_table(Data& data) {
 //
 //         !!! input must be separated by commas, contain no spaces !!!
 //             (ex. "1,2,3,4,5")
-void adjust_domain_points(Data& data) {
+void adjust_domain_points() {
 
     // show current x-values
     cout << "\n\nThe current values are: \n\t";
-    for(int i = 0; i < data.domain_values.size(); i++) {
-        if(i == data.domain_values.size() - 1) {
-            cout << "x=" << data.domain_values[i];
+    for(int i = 0; i < game_data.domain_values.size(); i++) {
+        if(i == game_data.domain_values.size() - 1) {
+            cout << "x=" << game_data.domain_values[i];
             continue;
         }
-        cout << "x=" << data.domain_values[i] << ", ";
+        cout << "x=" << game_data.domain_values[i] << ", ";
     }
 
     // 
@@ -133,17 +140,15 @@ void adjust_domain_points(Data& data) {
         input.erase(0, pos + delimiter.length());
     }
 
-    data.domain_values = new_values;
+    game_data.domain_values = new_values;
 }
 
 // generates random doubles given double typed bounds 
 double random_bounds(double start, double end) {
-    std::uniform_real_distribution<double> unif(start, end);
-    std::default_random_engine re;
-    return unif(re);
+    return (rand() / (double)RAND_MAX) * (end - start) + start;
 }
 
-void generate_random(Data& data) {
+void generate_random() {
     cout << "\n\nPick integer start and end values for the range of random values: \n";
     double start, end;
     
@@ -157,16 +162,16 @@ void generate_random(Data& data) {
     Equation rand_eq = Equation {random_bounds(start, end), random_bounds(start, end)};
     cout << "\tf(x)=" << rand_eq.as_string();
 
-    data.set_current_equation(rand_eq);
-    make_table(data);
+    game_data.set_current_equation(rand_eq);
+    make_table();
 }
 
 // shows the history of all the functions the user has used
 // (can contains repeated and consecutive elements)
-void choose_from_history(Data& data) {
+void choose_from_history() {
 
     // in case it's the first option the user chose
-    if(data.history.size() == 0) {
+    if(game_data.history.size() == 0) {
         cout << "\nNo functions have been used.\nPress any key to return to the home screen.";
         getch();
         cout << "\n\n\n----------------\n";
@@ -174,11 +179,11 @@ void choose_from_history(Data& data) {
     }
 
     // when there is at least 1 function in the history list to view
-    cout << "\nThere are " << data.history.size() << " functions to choose from: \n";
-    for(int i = 0; i < data.history.size(); i++) {
+    cout << "\nThere are " << game_data.history.size() << " functions to choose from: \n";
+    for(int i = 0; i < game_data.history.size(); i++) {
 
         // list them all in a nice way
-        cout << "\t[" << i << "] f(x)=" << data.history[i].as_string() << endl;
+        cout << "\t[" << i << "] f(x)=" << game_data.history[i].as_string() << endl;
     }
 
 
@@ -195,13 +200,13 @@ void choose_from_history(Data& data) {
 
     // cast choice (string) to int to use as an index for history
     std:istringstream(choice) >> number;
-    data.set_current_equation(data.history[number]);
+    game_data.set_current_equation(game_data.history[number]);
 
-    make_table(data);
+    make_table();
 }
 
 // the first option; prompts the user to make a new function of their choosing
-void input_function(Data& data) {
+void input_function() {
 
     // constants init ( f(x) = Ax + B )
     double A = 0;
@@ -223,16 +228,16 @@ void input_function(Data& data) {
     cout << "\tB: ";
     cin >> B;
 
-    data.set_current_equation(A, B);
-    make_table(data);
+    game_data.set_current_equation(A, B);
+    make_table();
 }
 
 // converts a user choice to the index its matching option in Data
 // 
 // since you can't match strings in c++, this is what i came up with
-int choice_to_index(string choice, Data& data) {
-    for(int i = 0; i < data.options.size(); i++) {
-        if(choice == data.options[i]){
+int choice_to_index(string choice) {
+    for(int i = 0; i < game_data.options.size(); i++) {
+        if(choice == game_data.options[i]){
             return i;
         }
     }
@@ -251,7 +256,7 @@ void print_options() {
 
 // essentially the main menu for the program
 // gets input from user and passes off work to the proper functions
-void program_loop(Data& data) {
+void program_loop() {
     string choice = "";
 
     // (main control loop)
@@ -260,7 +265,7 @@ void program_loop(Data& data) {
         cin >> choice;
 
         // can't switch string in c++ :'(
-        switch(choice_to_index(choice, data)) {
+        switch(choice_to_index(choice)) {
 
             // 'no index found' case (any invalid options, eg: "aoeunsth", "a", "nathsx9420yh", etc.)
             case -1: 
@@ -269,23 +274,23 @@ void program_loop(Data& data) {
 
             // option [0]: input a function
             case 0: 
-                input_function(data);
+                input_function();
                 break;
 
             // option [1]: view the history
             case 1: 
-                choose_from_history(data);
+                choose_from_history();
                 break;
             
             // option [2]: generate a random function
             case 2: 
-                generate_random(data);
+                generate_random();
                 break;
 
             // option [3]: change default points of evaluation
             // (segfaults my behated) ((i fought for like 2 hours))
             case 3: 
-                adjust_domain_points(data);
+                adjust_domain_points();
                 break;
 
             // option [q]: quit
@@ -303,7 +308,7 @@ void print_greeting() {
 int main() {
     print_greeting();
 
-    // setting up the initial data for the Data struct in a readable way
+    // setting up the initial game_data for the Data struct in a readable way
     vector<Equation> history = {};
     vector<string> options = {"0", "1", "2", "3", "q"};
     vector<double> domain = {1, 2, 3, 4, 5};
@@ -311,10 +316,10 @@ int main() {
 
     // Data essentially just stores all the important information that needs to 
     // be referenced to actually use the program continuously
-    Data program_data = Data {history, options, domain, equation};
+    game_data.update(history, options, domain, equation);
 
     // start the program
-    program_loop(program_data);
+    program_loop();
 }
 
 /*
